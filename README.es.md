@@ -113,6 +113,21 @@ El proyecto sigue una arquitectura Modelo-Vista-Controlador (MVC) para asegurar 
 
 - config.json: Guarda la configuración del usuario, como el idioma seleccionado.
 
+- `tests/`: Pruebas unitarias (por ejemplo, el análisis de líneas de log).
+
+- `requirements-dev.txt`: Dependencias de desarrollo opcionales (p. ej. pytest) para colaboradores y CI.
+
+---
+
+## Desarrollo
+
+### Ejecutar pruebas
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
 ---
 
 ## 👨‍💻 Autor

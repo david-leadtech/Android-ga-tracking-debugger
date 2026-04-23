@@ -4,7 +4,7 @@
 # This software is licensed under the Custom Shared-Profit License (CSPL) v1.0.
 # See the LICENSE.txt file for details.
 
-__version__ = "1.0.0" # <-- AÑADE ESTO
+__version__ = "1.0.0"
 
 import tkinter as tk
 from tkinter import messagebox

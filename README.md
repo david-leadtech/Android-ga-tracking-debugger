@@ -119,7 +119,22 @@ The project follows a Model-View-Controller (MVC) architecture to ensure a clear
 
 - config.json: Stores the user's configuration, such as the selected language.
 
+- `tests/`: Unit tests (for example, log line parsing).
 
+- `requirements-dev.txt`: Optional dev dependencies (e.g. pytest) for contributors and CI.
+
+
+
+---
+
+## Development
+
+### Running tests
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
 
 ---
 
