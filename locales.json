@@ -50,9 +50,22 @@
       "download_adb": "Descargar ADB (Google)",
       "error.device_not_found": "Dispositivo no encontrado",
       "error.several_devices_title": "ADB: varios dispositivos",
-      "error.several_devices_description": "Se ha detectado más de un dispositivo/emulador conectado.\nPor favor, mantén conectado solo el que deseas depurar."
+      "error.several_devices_description": "Se ha detectado más de un dispositivo/emulador conectado.\nPor favor, mantén conectado solo el que deseas depurar.",
+      "device.label": "Dispositivo:",
+      "export.button": "Exportar sesión (JSON)",
+      "export.error_title": "Error al exportar",
+      "export.success_title": "Exportación",
+      "export.success_message": "La sesión se ha guardado correctamente.",
+      "export.filetype_all": "Todos los archivos",
+      "status.adb.missing": "ADB: no instalado o no en PATH",
+      "status.adb.no_device": "ADB: sin dispositivos",
+      "status.ready": "Listo",
+      "status.capturing": "Capturando",
+      "detail.event_title": "Detalle de evento",
+      "detail.user_prop_title": "Propiedad de usuario",
+      "detail.consent_title": "Detalle de consentimiento"
     },
-  
+
     "en": {
       "menu.languages": "Languages",
       "menu.spanish": "Spanish",
@@ -104,9 +117,21 @@
       "download_adb": "Download ADB (Google)",
       "error.device_not_found": "Device not found",
       "error.several_devices_title": "ADB: Multiple Devices",
-      "error.several_devices_description": "More than one device/emulator has been detected connected.\nPlease keep only the one you want to debug connected."
+      "error.several_devices_description": "More than one device/emulator has been detected connected.\nPlease keep only the one you want to debug connected.",
+      "device.label": "Device:",
+      "export.button": "Export session (JSON)",
+      "export.error_title": "Export failed",
+      "export.success_title": "Export",
+      "export.success_message": "Session file saved successfully.",
+      "export.filetype_all": "All files",
+      "status.adb.missing": "ADB: not installed or not in PATH",
+      "status.adb.no_device": "ADB: no devices",
+      "status.ready": "Ready",
+      "status.capturing": "Capturing",
+      "detail.event_title": "Event detail",
+      "detail.user_prop_title": "User property",
+      "detail.consent_title": "Consent detail"
     }
-  
-  
+
   }
   

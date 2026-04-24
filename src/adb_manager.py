@@ -28,61 +28,71 @@ def check_adb_installed():
         return False
 
 
-def check_device_connected():
+def get_adb_devices():
     """
-    Runs 'adb devices' and determines if at least one device or emulator is connected.
+    Returns serial numbers for devices in 'device' state (not offline/unauthorized).
     """
     try:
         result = subprocess.check_output(
-            ["adb", "devices"], stderr=subprocess.STDOUT, universal_newlines=True,
-            creationflags=CREATE_NO_WINDOW)
-        lines = result.strip().split('\n')
-
-        # The first line is usually: "List of devices attached"
-        # Starting from the second, each line represents a device (id + state).
-        if len(lines) > 1:
-            # We filter out empty lines or those that begin with "* daemon"
-            device_lines = [
-                l for l in lines[1:]
-                if l.strip() != '' and not l.startswith('* daemon')
-            ]
-
-            for dev in device_lines:
-                parts = dev.split()
-                # parts[0] = device ID, parts[1] = state
-                if len(parts) >= 2:
-                    state = parts[1].lower()
-                    if state == "device":
-                        return True
-        return False
+            ["adb", "devices"],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            creationflags=CREATE_NO_WINDOW,
+        )
+        lines = result.strip().split("\n")
+        if len(lines) < 2:
+            return []
+        out = []
+        for line in lines[1:]:
+            line = line.strip()
+            if not line or line.startswith("*"):
+                continue
+            parts = line.split()
+            if len(parts) >= 2 and parts[1].lower() == "device":
+                out.append(parts[0])
+        return out
     except (FileNotFoundError, subprocess.CalledProcessError):
-        # If ADB is not installed or fails
-        return False
+        return []
+
+
+def check_device_connected():
+    """
+    True if at least one device/emulator is in 'device' state.
+    """
+    return len(get_adb_devices()) > 0
 
 
 # --- Class for Handling Errors --- #
 
+
 class AdbError(Enum):
     MULTIPLE_DEVICES = auto()
-    # DEVICE_OFFLINE = auto() # <-- Example of how to add more in the future
 
-# --- Class to Manage Logcat ---
+
+# --- Class to Manage Logcat --- #
 
 
 class LogcatManager:
-    def __init__(self, log_queue, on_error_callback):
+    def __init__(self, log_queue, on_error_callback, device_serial=None):
         self.log_queue = log_queue
         self.on_error_callback = on_error_callback
+        # When set, all adb invocations use: adb -s <serial> ...
+        self._device = device_serial
         self.logcat_process = None
         self.stop_event = threading.Event()
         self.stdout_thread = None
         self.stderr_thread = None
 
+    def _adb(self, *args):
+        if self._device:
+            return ["adb", "-s", self._device, *args]
+        return ["adb", *args]
+
     def _read_stdout(self):
         """Reads lines from logcat stdout and pushes them into a queue"""
         while not self.stop_event.is_set() and self.logcat_process.poll() is None:
             line = self.logcat_process.stdout.readline()
-            self.log_queue.put(line.rstrip('\n'))
+            self.log_queue.put(line.rstrip("\n"))
 
     def _read_stderr(self):
         """Read the error output, looking for problems."""
@@ -99,23 +109,27 @@ class LogcatManager:
         """Prepares and starts the logcat process and reader threads."""
         self.stop_event.clear()
 
-        # Prepare the ADB environment
-        subprocess.run(["adb", "shell", "setprop", "log.tag.FA",
-                       "VERBOSE"], creationflags=CREATE_NO_WINDOW)
-        subprocess.run(["adb", "shell", "setprop", "log.tag.FA-SVC",
-                       "VERBOSE"], creationflags=CREATE_NO_WINDOW)
-        subprocess.run(["adb", "logcat", "-c"], creationflags=CREATE_NO_WINDOW)
+        subprocess.run(
+            self._adb("shell", "setprop", "log.tag.FA", "VERBOSE"),
+            creationflags=CREATE_NO_WINDOW,
+        )
+        subprocess.run(
+            self._adb("shell", "setprop", "log.tag.FA-SVC", "VERBOSE"),
+            creationflags=CREATE_NO_WINDOW,
+        )
+        subprocess.run(
+            self._adb("logcat", "-c"),
+            creationflags=CREATE_NO_WINDOW,
+        )
 
-        # Start the logcat process
         self.logcat_process = subprocess.Popen(
-            ["adb", "logcat", "-v", "time", "-s", "FA", "FA-SVC"],
+            self._adb("logcat", "-v", "time", "-s", "FA", "FA-SVC"),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,
-            creationflags=CREATE_NO_WINDOW
+            creationflags=CREATE_NO_WINDOW,
         )
 
-        # Start reading threads
         self.stdout_thread = threading.Thread(
             target=self._read_stdout, daemon=True)
         self.stderr_thread = threading.Thread(
@@ -130,7 +144,6 @@ class LogcatManager:
         if self.logcat_process and self.logcat_process.poll() is None:
             self.stop_event.set()
             self.logcat_process.terminate()
-            # Wait for the process to actually finish
             try:
                 self.logcat_process.wait(timeout=2)
             except subprocess.TimeoutExpired:

@@ -21,6 +21,8 @@ class DataModel:
             "ad_user_data": None, "ad_personalization": None
         }
         self.consent_entries = {}
+        # Snapshots in order each time consent changes (for export / review).
+        self.consent_history = []
         self.search_matches = []
         self.current_match_index = -1
 
@@ -78,9 +80,14 @@ class DataModel:
         self.events_data.clear()
         self.user_properties.clear()
         self.consent_entries.clear()
+        self.consent_history.clear()
         self.search_matches.clear()
         self.current_match_index = -1
         self.current_consent.update({k: None for k in self.current_consent})
+
+    def append_consent_history(self, consent_data):
+        """Store a copy of a consent state for later export (same order as in UI)."""
+        self.consent_history.append(dict(consent_data))
 
     def has_consent_changed(self, new_filled_consent):
         """
