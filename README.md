@@ -30,7 +30,7 @@ A desktop tool that lets you inspect Firebase/Google Analytics logs from connect
 ### 1. Clone or download this repo
 
 ```bash
-git clone https://github.com/alejandro-reinoso/Android-ga-tracking-debugger.git
+git clone https://github.com/david-leadtech/Android-ga-tracking-debugger.git
 cd Android-ga-tracking-debugger
 ```
 
@@ -138,8 +138,28 @@ python -m pytest
 
 ---
 
+## Releases
+
+Versioning follows `__version__` in `main.py`. The first GitHub release for this fork is **`v1.0.0`** (current baseline). After new work lands on `main`, bump the version and tag **`v1.1.0`**, etc. See [CHANGELOG.md](CHANGELOG.md) and [docs/RELEASES.md](docs/RELEASES.md); pushing a `v*.*.*` tag runs the Release workflow.
+
+---
+
+## Repository
+
+This project is developed and released from **david-leadtech/Android-ga-tracking-debugger** only. Clone and open issues there.
+
+If your local `origin` still points elsewhere, run:
+
+```bash
+git remote set-url origin https://github.com/david-leadtech/Android-ga-tracking-debugger.git
+```
+
+See [docs/REPO.md](docs/REPO.md) for details.
+
+---
+
 ## 👨‍💻 Author
 
-**Alejandro Reinoso**  
+Original tool by **Alejandro Reinoso** (see `LICENSE.txt`).  
 🔗 [LinkedIn](https://www.linkedin.com/in/alejandroreinosogomez/)  
 📬 [Contact](https://alejandroreinoso.com/contacto/?utm_source=ga_android_debugger)

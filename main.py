@@ -4,7 +4,7 @@
 # This software is licensed under the Custom Shared-Profit License (CSPL) v1.0.
 # See the LICENSE.txt file for details.
 
-__version__ = "1.1.0"
+__version__ = "1.0.0"
 
 import json
 from datetime import datetime, timezone
@@ -34,8 +34,7 @@ from src.model import DataModel
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title(
-            f"Analytics Tracking Debugger Android (Alejandro Reinoso) - v{__version__}")
+        self.root.title(f"Analytics Tracking Debugger Android - v{__version__}")
         self.root.iconbitmap(resource_path(
             "./assets/logo-alejandro-reinoso.ico"))
 
